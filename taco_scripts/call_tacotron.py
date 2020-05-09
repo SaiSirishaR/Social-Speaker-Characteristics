@@ -39,7 +39,8 @@ def plot_alignment(alignment, path, info=None):
   plt.savefig(path, format='png')
 
 
-os.environ["CUDA_VISIBLE_DEVICES"]='0'
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]='1'
 use_cuda = torch.cuda.is_available()
 print("use cuda is", use_cuda)
 if use_cuda:
@@ -161,11 +162,18 @@ def _learning_rate_decay(init_lr, global_step):
 
 ##### Paths to Dataset directories #######
 
-path = '/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/'
-text_path= path + 'ehmm/etc/new_txt.phseq.data'
-mel_path= path + 'festival/falcon_mspec'
-spec_path = path + 'festival/falcon_lspec'
-checkpoint_dir='/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/scripts/checkpoints/'
+path = '/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/'
+text_path= path + '../cmu_us_ljspeech/ehmm/etc/new_txt.phseq.data_train'
+mel_path= path + '../cmu_us_ljspeech/festival/falcon_mspec'
+spec_path = path + '../cmu_us_ljspeech/festival/falcon_lspec'
+checkpoint_dir='/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/checkpoints/'
+filenames = path +'fnames.train'
+
+fnames_array = []
+
+fg = open(filenames)
+for name in fg:
+  fnames_array.append(name.split('\n')[0])
 
 ######### Data Loader Module ############
 
@@ -183,8 +191,10 @@ spec_files = sorted(os.listdir(spec_path))
 mel_files = sorted(os.listdir(mel_path))
 
 for num, spec_file in enumerate(spec_files):
+  if spec_file.split('.')[0] in fnames_array:
        spec_filenames.append(numpy.load(os.path.join(spec_path,spec_file)))
 for num, mel_spec_file in enumerate(mel_files):
+  if mel_spec_file.split('.')[0] in fnames_array:
        mel_spec_filenames.append(numpy.load(os.path.join(mel_path,mel_spec_file)))
 
 exp_data = arctic_data(txt_input = input_array, spec_dir=spec_filenames, mel_spec_dir=mel_spec_filenames) #### Data paths go here
@@ -192,7 +202,7 @@ data = DataLoader(exp_data, batch_size=8, shuffle=True, collate_fn=collate_fn)
 
 ########### Model initialization ########
 
-print("dict length is", len(dict), dict)
+print("dict length is", len(dict),dict)
 model = Tacotron(n_vocab= int(len(dict))+1, embedding_dim=256, mel_dim= hparams.mels, linear_dim=hparams.spec_len, r=hparams.outputs_per_step, padding_idx=hparams.padding_idx, use_memory_mask=hparams.use_memory_mask)
 #model = Tacotron(dict_length= int(len(dict))+1, embeds=embedding_dim, mel_dim= mels, linear_dim=spec_len)
 if use_cuda:
@@ -205,9 +215,9 @@ optimizer = optim.Adam(model.parameters(),
                            weight_decay=hparams.weight_decay)
 
 
-'''
+
 # Load checkpoint
-checkpoint_path ='/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/scripts/checkpoints/checkpoint_step3000.pth' 
+checkpoint_path ='/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/checkpoints/checkpoint_step143000.pth' 
 
 print("Load checkpoint from: {}".format(checkpoint_path))
 checkpoint = torch.load(checkpoint_path)
@@ -219,7 +229,7 @@ try:
 except:
   # TODO
   pass
-'''
+
 
 ##### Batched and padded datasets #######
 global global_step, global_epoch
@@ -236,12 +246,12 @@ with torch.autograd.set_detect_anomaly(True):
 #   print("length of dict is", int(len(dict)), "length of data is", len(data))
 
 #   print("batch", num)
-####   sorted_lengths, indices = torch.sort(
-####                lengths.view(-1), dim=0, descending=True)
-####   sorted_lengths = sorted_lengths.long().numpy()
+   sorted_lengths, indices = torch.sort(
+                lengths.view(-1), dim=0, descending=True)
+   sorted_lengths = sorted_lengths.long().numpy()
 
 #   print("lengths are", lengths, "sorted lemnghts are", sorted_lengths)
-####   text, mel, spec = text[indices], mel[indices], spec[indices]
+   text, mel, spec = text[indices], mel[indices], spec[indices]
 #   print("indices are", indices)
 
    current_lr = _learning_rate_decay(hparams.initial_learning_rate, global_step)
@@ -259,7 +269,7 @@ with torch.autograd.set_detect_anomaly(True):
 
    if use_cuda:
      text,spec, mel = text.cuda(), spec.cuda(), mel.cuda()
-     mel_outputs, linear_outputs, attn = model(text, mel, input_lengths=None)
+     mel_outputs, linear_outputs, attn = model(text, mel, input_lengths=sorted_lengths)
 
 #     print("griffin lim on", numpy.shape(linear_outputs[0].cpu().data.numpy()))
   
@@ -299,7 +309,8 @@ with torch.autograd.set_detect_anomaly(True):
 
 
      time_per_step = time.time() - start_time
-
+     if global_step%100 ==1:
+       print("time per step is", time_per_step)
      running_loss += loss.item()
 
 
