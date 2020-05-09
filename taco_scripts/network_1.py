@@ -9,6 +9,8 @@ from attention import get_mask_from_lengths
 import numpy
 
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
+
 class Prenet(nn.Module):
     def __init__(self, in_dim, sizes=[256, 128]):
         super(Prenet, self).__init__()
@@ -23,6 +25,8 @@ class Prenet(nn.Module):
         for linear in self.layers:
             inputs = self.dropout(self.relu(linear(inputs)))
         return inputs
+
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class BatchNormConv1d(nn.Module):
     def __init__(self, in_dim, out_dim, kernel_size, stride, padding,
@@ -40,6 +44,7 @@ class BatchNormConv1d(nn.Module):
             x = self.activation(x)
         return self.bn(x)
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class Highway(nn.Module):
     def __init__(self, in_size, out_size):
@@ -56,6 +61,7 @@ class Highway(nn.Module):
         T = self.sigmoid(self.T(inputs))
         return H * T + inputs * (1.0 - T)
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class CBHG(nn.Module):
     """CBHG module: a recurrent neural network composed of:
@@ -134,6 +140,7 @@ class CBHG(nn.Module):
 
         return outputs
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class Encoder(nn.Module):
     def __init__(self, in_dim):
@@ -145,6 +152,7 @@ class Encoder(nn.Module):
         inputs = self.prenet(inputs)
         return self.cbhg(inputs, input_lengths)
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class Decoder(nn.Module):
     def __init__(self, in_dim, r):
@@ -263,6 +271,7 @@ class Decoder(nn.Module):
 def is_end_of_frames(output, eps=0.2):
     return (output.data <= eps).all()
 
+# Type: Acquisition_CodeBorrowed Source: https://github.com/r9y9/tacotron_pytorch/blob/62db7217c10da3edb34f67b185cc0e2b04cdf77e/tacotron_pytorch/attention.py#L7
 
 class Tacotron(nn.Module):
     def __init__(self, n_vocab, embedding_dim=256, mel_dim=80, linear_dim=1025,
