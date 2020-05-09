@@ -319,21 +319,3 @@ with torch.autograd.set_detect_anomaly(True):
   global_epoch += 1
 
 
-'''
-####### When to print loss ################################
-
-
-    if current_step % log_step == 0:
-                print("time per step: %.2f sec" % time_per_step)
-                print("At timestep %d" % current_step)
-                print("linear loss: %.4f" % linear_loss.data[0])
-                print("mel loss: %.4f" % mel_loss.data[0])
-                print("total loss: %.4f" % loss.data[0])
-
-
-
-     wav = _griffin_lim(librosa.amplitude_to_db(np.abs(linear_outputs[0].cpu().data.numpy())))
-     wav = wav[:find_endpoint(wav)]
-     wav *= 32767 / max(0.01, np.max(np.abs(wav)))
-     librosa.output.write_wav('/home/srallaba/projects/personality_stuff/voices/cmu_us_LJspeech/Speech_Expts_Barebones/taco_25October_expts/scripts/sample_test.wav', wav, rate)
-'''
