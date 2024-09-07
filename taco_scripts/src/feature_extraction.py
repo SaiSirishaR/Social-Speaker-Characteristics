@@ -84,8 +84,8 @@ def find_endpoint(wav, threshold_db=-40, min_silence_sec=0.8):
 
 
 
-folder = '/home/srallaba/projects/personality_stuff/voices/cmu_us_slt_12Dec/wav'
-feats = '/home/srallaba/projects/personality_stuff/voices/cmu_us_slt_12Dec/feats'
+folder = '/path/to/wavfolder/'
+feats = '/path/to/featfolder/'
 files = sorted(os.listdir(folder))
 print("the wavefile are:", files)
 
