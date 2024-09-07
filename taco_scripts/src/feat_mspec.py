@@ -1,5 +1,5 @@
 import os, sys
-FALCON_DIR= '/home/srallaba/tools/festvox/src/falcon/'
+FALCON_DIR= '/path/to/falcondirectory/'
 sys.path.append(FALCON_DIR)
 import numpy as np
 from utils import audio
