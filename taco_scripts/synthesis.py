@@ -1,7 +1,7 @@
 ##### Mel spec extraction #######
 
 import os, sys
-FALCON_DIR= '/home/srallaba/tools/festvox/src/falcon/'
+FALCON_DIR= '/path/to/falcon/directory'
 sys.path.append(FALCON_DIR)
 import librosa
 import os, numpy
@@ -119,11 +119,11 @@ step = checkpoint.split('.')[0].split('_')[-1]
 print("step is", step)
 
 
-test_file_path ='/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/scripts/test_file.txt' 
+test_file_path ='/pth/to/testfiles/' 
 
 
 
-path = '/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/'
+path = '/path/to/database/'
 text_path= path + 'ehmm/etc/new_txt.phseq.data'
 
 ######### Data Loader Module ############
@@ -142,8 +142,7 @@ for line in test_file_path:
   input_array.append([dict[word] for word in words])
 
 
-#path = '/home/srallaba/projects/personality_stuff/voices/cmu_us_slt_12Dec/'
-#text_path= path + 'ehmm/etc/new_txt.phseq.data'
+
 
 #tseq = word_ids(text_path)
 
@@ -160,13 +159,11 @@ for i in range(0,len(input_array)):
   print("processing file no:", i)
   linear_output, alignment = test(model, np.array(input_array[i]))
   waveform = audio.inv_spectrogram(linear_output.T)
-  dst_wav_path = join('/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/scripts/arabic_resynth_wav/', "{}_{}.wav".format(str(i),step))
+  dst_wav_path = join('/path/to/resynthdierctortory/', "{}_{}.wav".format(str(i),step))
   audio.save_wav(waveform, dst_wav_path)
 
-  dst_alignment_path = join('/home/srallaba/projects/personality_stuff/voices/arabic_data/cmu_us_arabic/scripts/arabic_resynth_wav/', "{}_{}_alignment.png".format(str(i), step))
+  dst_alignment_path = join('/path/to/resynthdierctortory/', "{}_{}_alignment.png".format(str(i), step))
 
-  #dst_alignment_path = join('/home/srallaba/projects/personality_stuff/voices/cmu_us_slt_12Dec/scripts/resynth_wav/', "{}_step61k_alignment.png".format(str(i)))
-#  alignment = attn[idx].cpu().data.numpy()
   plot_alignment(alignment.T, dst_alignment_path,
                            info="tacotron, {}".format(step))
   
