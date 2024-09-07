@@ -4,4 +4,4 @@
    ii) feat_mspec.py
    iii) feat_phones.py
 3) Train tacotron call_tacotron.py 
-4) speech reconstruction synthesis_2.py
+4) speech reconstruction synthesis.py
