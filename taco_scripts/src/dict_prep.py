@@ -4,7 +4,6 @@ def word_ids(file):
  d = {}
 # d['SOS'] = len(d)+0
  i=1
-#text_file = open('/home/srallaba/projects/personality_stuff/voices/cmu_us_LJspeech/Speech_Expts_Barebones/taco_25October_expts/Data/cmu_us_bdl_arctic/etc/new_txt.done.data')
  text_file= open(file).readlines()
  for line in text_file:
   line=line.strip()
