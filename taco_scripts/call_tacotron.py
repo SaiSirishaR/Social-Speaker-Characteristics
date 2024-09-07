@@ -162,11 +162,11 @@ def _learning_rate_decay(init_lr, global_step):
 
 ##### Paths to Dataset directories #######
 
-path = '/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/'
-text_path= path + '../cmu_us_ljspeech/ehmm/etc/new_txt.phseq.data_train'
-mel_path= path + '../cmu_us_ljspeech/festival/falcon_mspec'
-spec_path = path + '../cmu_us_ljspeech/festival/falcon_lspec'
-checkpoint_dir='/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/checkpoints/'
+path = '/path/to/scripts/'
+text_path= path + 'path/to/text/'
+mel_path= path + 'path/to/melspectrograms/'
+spec_path = path + 'path/to/lspec/'
+checkpoint_dir='/path/to/checkpointsdirectory/'
 filenames = path +'fnames.train'
 
 fnames_array = []
@@ -217,7 +217,7 @@ optimizer = optim.Adam(model.parameters(),
 
 
 # Load checkpoint
-checkpoint_path ='/home/srallaba/projects/text2speech/voices/transfer_learning/LJSpeech-1.1/taco_scripts/checkpoints/checkpoint_step143000.pth' 
+checkpoint_path ='/path/to/specificcheckpoint/' 
 
 print("Load checkpoint from: {}".format(checkpoint_path))
 checkpoint = torch.load(checkpoint_path)
